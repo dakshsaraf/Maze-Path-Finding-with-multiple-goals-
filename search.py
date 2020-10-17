@@ -196,12 +196,14 @@ def bfs_helper_heuristic(maze, start, end):
 
 def multi_heuristic(node,maze):
 
-    #REDO WITH MINIMUM SPANNING TREE
-
-    return 0
     # position, objectives = node
     # distances = [len(bfs_helper_heuristic(maze,position,i)) for i in objectives]
     # return max(distances) if len(distances) > 0 else 0
+    
+    
+    #REDO WITH MINIMUM SPANNING TREE
+
+    return 0
 
 def astar_multi(maze):
     """
