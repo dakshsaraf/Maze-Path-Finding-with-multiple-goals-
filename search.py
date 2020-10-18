@@ -162,48 +162,8 @@ def astar_corner(maze):
                 parent_map[nbr] = node
     return []
 
-
-
-def bfs_helper_heuristic(maze, start, end):
-    """
-    Runs BFS for part 1 of the assignment.
-
-    @param maze: The maze to execute the search on.
-
-    @return path: a list of tuples containing the coordinates of each state in the computed path
-    """
-    # TODO: Write your code here
-
-    start = start
-    objectives = tuple([end])
-    start_state = (start,objectives) 
-    queue = [start_state]
-    visited = set(start_state)
-    parent_map = {}
-    
-    # state = (node,[objectives])
-    while(len(queue)>0):
-        node = queue.pop(0)
-        if(len(node[1]) == 0):
-            return find_path(start_state,node,parent_map)
-
-        for nbr in get_neighbours(maze,node):
-            if nbr not in visited:
-                visited.add(nbr)
-                queue.append(nbr)
-                parent_map[nbr] = node
-    return []
-
-def multi_heuristic(node,maze):
-
-    # position, objectives = node
-    # distances = [len(bfs_helper_heuristic(maze,position,i)) for i in objectives]
-    # return max(distances) if len(distances) > 0 else 0
-    
-    
-    #REDO WITH MINIMUM SPANNING TREE
-
-    return 0
+def multi_heuristic(node):
+    return cornerHeuristic(node)
 
 def astar_multi(maze):
     """
@@ -222,7 +182,7 @@ def astar_multi(maze):
     g_map = {}
     parent_map = {}
     
-    open_set.put((multi_heuristic(start_state,maze),start_state))
+    open_set.put((multi_heuristic(start_state),start_state))
     g_map[start_state] = 0
     
     while(len(open_set.queue)>0):
@@ -234,7 +194,7 @@ def astar_multi(maze):
             new_g = g_map[node] + 1 
             if nbr not in g_map or new_g < g_map[nbr]:
                 g_map[nbr] = new_g
-                open_set.put((new_g+multi_heuristic(nbr,maze),nbr))
+                open_set.put((new_g+multi_heuristic(nbr),nbr))
                 parent_map[nbr] = node
     return []
 
@@ -248,4 +208,26 @@ def fast(maze):
     @return path: a list of tuples containing the coordinates of each state in the computed path
     """
     # TODO: Write your code here
+    #GREEDY ALGORITHM G=0
+    start = maze.getStart()
+    objectives = tuple(maze.getObjectives()) 
+    start_state = (start,objectives)
+    open_set = PriorityQueue()
+    g_map = {}
+    parent_map = {}
+    
+    open_set.put((cornerHeuristic(start_state),start_state))
+    g_map[start_state] = 0
+    
+    while(len(open_set.queue)>0):
+        node = open_set.get()[1]
+        if(len(node[1]) == 0):
+            return find_path(start_state,node,parent_map)
+
+        for nbr in get_neighbours(maze,node):
+            new_g = g_map[node] + 0
+            if nbr not in g_map or new_g < g_map[nbr]:
+                g_map[nbr] = new_g
+                open_set.put((new_g+cornerHeuristic(nbr),nbr))
+                parent_map[nbr] = node
     return []
